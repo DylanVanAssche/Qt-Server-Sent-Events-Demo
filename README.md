@@ -6,4 +6,4 @@ A Qt5 Server Sent Events (SSE) demo.
 
 - `cmake CMakeLists.txt`
 - `make`
-- `./qt-server-sent-events-demo`
+- `./qt-sse-demo`
