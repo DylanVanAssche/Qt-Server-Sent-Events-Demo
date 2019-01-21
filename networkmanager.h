@@ -36,6 +36,7 @@
 #define CONTENT_TYPE "application/ld+json"
 #define ACCEPT_HEADER "text/event-stream"
 #define USER_AGENT "Qt SSE demo"
+#define MAX_RETRIES 3
 
 // Singleton pattern
 namespace Network {
@@ -57,6 +58,7 @@ private slots:
     void streamReceived();
 
 private:
+    qint16 m_retries;
     QNetworkReply *m_reply;
     QNetworkAccessManager *m_QNAM;
     static Manager *m_instance;

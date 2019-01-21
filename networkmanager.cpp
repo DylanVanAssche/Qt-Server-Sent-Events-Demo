@@ -20,12 +20,12 @@ Network::Manager *Network::Manager::m_instance = nullptr;
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 17 Jul 2018
- * @brief QRail::Network::Manager facade constructor
+ * @date 21 Jan 2019
+ * @brief Network::Manager facade constructor
  * @package Network
  * @private
- * Constructs a QRail::Network::Manager facade to access the network using the HTTP protocol.
- * The QRail::Network::Manager facade makes network access in Qt abstract from the underlying library (QNetworkAccessManager, libCurl, ...).
+ * Constructs a Network::Manager facade to access the network using the HTTP protocol.
+ * The Network::Manager facade makes network access in Qt abstract from the underlying library (QNetworkAccessManager, libCurl, ...).
  */
 Network::Manager::Manager(QObject *parent): QObject(parent)
 {
@@ -47,23 +47,26 @@ Network::Manager::Manager(QObject *parent): QObject(parent)
             SIGNAL(finished(QNetworkReply *)),
             this,
             SLOT(streamFinished(QNetworkReply *)));
+
+    // Init retries counter
+    m_retries = 0;
 }
 
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 9 Aug 2018
- * @brief Get a QRail::Network::Manager instance
+ * @date 21 Jan 2019
+ * @brief Get a Network::Manager instance
  * @param QObject *parent = nullptr
- * @return QRail::Network::Manager *manager
+ * @return Network::Manager *manager
  * @package Network
  * @public
- * Constructs a QRail::Network::Manager if none exists and returns the instance.
+ * Constructs a Network::Manager if none exists and returns the instance.
  */
 Network::Manager *Network::Manager::getInstance()
 {
     if (m_instance == nullptr) {
-        qDebug() << "Creating new QRail::Network::Manager";
+        qDebug() << "Creating new Network::Manager";
         m_instance = new Manager();
     }
     return m_instance;
@@ -73,7 +76,7 @@ Network::Manager *Network::Manager::getInstance()
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 17 Jul 2018
+ * @date 21 Jan 2019
  * @brief Get a resource
  * @param const QUrl &url
  * @param QObject *caller
@@ -94,6 +97,14 @@ void Network::Manager::getResource(const QUrl &url)
 void Network::Manager::streamFinished(QNetworkReply *reply)
 {
     qDebug() << "Stream finished:" << reply->url();
+    qDebug() << "Reconnecting...";
+    if(m_retries < MAX_RETRIES) {
+        m_retries++;
+        this->getResource(reply->url());
+    }
+    else {
+        qCritical() << "Unable to reconnect, max retries reached";
+    }
 }
 
 void Network::Manager::streamReceived()
@@ -101,13 +112,14 @@ void Network::Manager::streamReceived()
     qDebug() << "Received event from stream";
     qDebug() << QString(m_reply->readAll()).simplified().replace("data: ", "");
     qDebug() << "-----------------------------------------------------";
+    m_retries = 0;
 }
 
 // Helpers
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 17 Jul 2018
+ * @date 21 Jan 2019
  * @brief Prepare the HTTP request
  * @param const QUrl &url
  * @return QNetworkRequest request
@@ -131,7 +143,7 @@ QNetworkRequest Network::Manager::prepareRequest(const QUrl &url)
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 21 Jul 2018
+ * @date 21 Jan 2019
  * @brief Gets the QNAM instance
  * @return QNetworkAccessManager *QNAM
  * @package Network
@@ -146,7 +158,7 @@ QNetworkAccessManager *Network::Manager::QNAM() const
 /**
  * @file networkmanager.cpp
  * @author Dylan Van Assche
- * @date 21 Jul 2018
+ * @date 21 Jan 2019
  * @brief Sets the QNAM instance
  * @param QNetworkAccessManager *value
  * @package Network
