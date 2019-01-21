@@ -133,7 +133,6 @@ QNetworkRequest Network::Manager::prepareRequest(const QUrl &url)
     QNetworkRequest request(url);
     request.setRawHeader(QByteArray("Accept"), QByteArray(ACCEPT_HEADER));
     request.setHeader(QNetworkRequest::UserAgentHeader, USER_AGENT);
-    request.setHeader(QNetworkRequest::ContentTypeHeader, CONTENT_TYPE);
     request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
     request.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
     return request;

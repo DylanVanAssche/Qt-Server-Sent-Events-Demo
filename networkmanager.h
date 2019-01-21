@@ -33,7 +33,6 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QSslError>
 
-#define CONTENT_TYPE "application/ld+json"
 #define ACCEPT_HEADER "text/event-stream"
 #define USER_AGENT "Qt SSE demo"
 #define MAX_RETRIES 3
