@@ -37,5 +37,14 @@ Makefile*
 # QtCtreator CMake
 CMakeLists.txt.user*
 
+# CMake
+CMakeCache.txt
+CMakeFiles*
+cmake_install.cmake
 
+# Build
+qt-sse-demo
+qt-sse-demo_autogen
 
+# NodeJS
+server/node_modules

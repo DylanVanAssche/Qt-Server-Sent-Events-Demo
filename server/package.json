@@ -1,0 +1,15 @@
+{
+  "name": "sse-server",
+  "version": "1.0.0",
+  "description": "A SSE server demo for testing purposes",
+  "main": "server.js",
+  "repository": "https://github.com/DylanVanAssche/Qt-Server-Sent-Events-Demo/server",
+  "author": "Dylan Van Assche",
+  "license": "GPLv3",
+  "private": false,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
